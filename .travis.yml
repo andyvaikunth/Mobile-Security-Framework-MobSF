@@ -3,6 +3,10 @@ python:
   - '3.6'
   - '3.7'
   - '3.8'
+os:
+  - linux
+  - osx
+  - windows
 git:
   depth: 25
   quiet: true
@@ -10,7 +14,6 @@ cache: pip
 jobs:
   include:
   - name: Xenial Linux
-    os: linux
     dist: xenial
     before_install:
     - export TRAVIS_COMMIT_MSG="$(git log --format=%B --no-merges -n 1)"
@@ -19,15 +22,13 @@ jobs:
     - wget https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox_0.12.5-1.xenial_amd64.deb
     - sudo dpkg -i wkhtmltox_0.12.5-1.xenial_amd64.deb
   - name: OSX, Xcode 11
-    os: osx
     language: shell
     osx_image: xcode11
     before_install:
     - export TRAVIS_COMMIT_MSG="$(git log --format=%B --no-merges -n 1)"
     - wget https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox-0.12.5-1.macos-cocoa.pkg
     - sudo installer -pkg wkhtmltox-0.12.5-1.macos-cocoa.pkg -target /
-  - name: "Windows-10 (no lint)"
-    os: windows
+  - name: "Windows-10"
     language: shell
     env:
     - JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
