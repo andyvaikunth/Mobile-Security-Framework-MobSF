@@ -1,21 +1,24 @@
 language: python
+python:
+  - '3.6'
+  - '3.7'
+  - '3.8'
 git:
   depth: 25
   quiet: true
 cache: pip
 jobs:
   include:
-  - name: Python 3.7 on Xenial Linux
+  - name: Xenial Linux
     os: linux
     dist: xenial
-    python: 3.7
     before_install:
     - export TRAVIS_COMMIT_MSG="$(git log --format=%B --no-merges -n 1)"
     - sudo apt-get install -y libpng16-16 xfonts-75dpi xfonts-base libffi-dev	
       libxml2-dev libxslt1-dev 
     - wget https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox_0.12.5-1.xenial_amd64.deb
     - sudo dpkg -i wkhtmltox_0.12.5-1.xenial_amd64.deb
-  - name: Python 3.7 on OSX, Xcode 11
+  - name: OSX, Xcode 11
     os: osx
     language: shell
     osx_image: xcode11
@@ -23,7 +26,7 @@ jobs:
     - export TRAVIS_COMMIT_MSG="$(git log --format=%B --no-merges -n 1)"
     - wget https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox-0.12.5-1.macos-cocoa.pkg
     - sudo installer -pkg wkhtmltox-0.12.5-1.macos-cocoa.pkg -target /
-  - name: "Python 3.7 on Windows (no lint)"
+  - name: "Windows-10 (no lint)"
     os: windows
     language: shell
     env:
@@ -38,13 +41,14 @@ install:
 - set PYTHONIOENCODING=UTF8
 - pip3 install --upgrade pip || python -m pip install --upgrade pip
 before_script:
+- pip3 install --upgrade tox
 - pip3 install --no-index --find-links=scripts/wheels yara-python
 - pip3 install --no-cache-dir -r requirements.txt
 - python3 manage.py makemigrations || python manage.py makemigrations
 - python3 manage.py migrate || python manage.py migrate
 - git submodule update --init --recursive
 script:
-- if [ "$TRAVIS_OS_NAME" != "windows" ]; then tox -e lint; fi
+- tox -e lint
 - python3 manage.py test || python manage.py test
 notifications:
   slack: mobsf:4Ce13XOnMRzFG3bqQ0Hap7OP
