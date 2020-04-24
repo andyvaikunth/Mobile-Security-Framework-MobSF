@@ -53,11 +53,20 @@ else
 fi
 
 echo '[INSTALL] Installing dex enabled yara-python'
-pip install --upgrade wheel
-rm -rf yara-python
-pip wheel --wheel-dir=yara-python --build-option="build" --build-option="--enable-dex" git+https://github.com/VirusTotal/yara-python.git@v3.11.0
-pip install --no-index --find-links=yara-python yara-python
-rm -rf yara-python
+pip install --no-index --find-links=scripts/wheels yara-python
+if [ $? -ne 0 ]; then
+    echo '[INSTALL] Building dex enabled yara-python'
+    pip install --upgrade wheel
+    rm -rf yara-python
+    pip wheel --wheel-dir=yara-python --build-option="build" --build-option="--enable-dex" git+https://github.com/VirusTotal/yara-python.git@v3.11.0
+    if [ $? -ne 0 ]; then
+        echo '[ERROR] APKiD installation failed. Have you installed all the requirements?'
+        echo 'Please follow the official documentation: https://mobsf.github.io/docs/'
+        read -p 'Press enter to continue'
+    fi
+    pip install --no-index --find-links=yara-python yara-python
+    rm -rf yara-python
+fi
 
 echo '[INSTALL] Installing Requirements'
 pip install --no-cache-dir -r requirements.txt

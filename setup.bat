@@ -39,18 +39,19 @@ where python >nul 2>&1 && (
   set INCLUDE=C:\Program Files\OpenSSL-Win64\include;%INCLUDE%
 
   echo [INSTALL] Installing dex enabled yara-python
-  pip install --upgrade wheel
-  rmdir /q /s yara-python >nul 2>&1
-  pip wheel --wheel-dir=yara-python --build-option="build" --build-option="--enable-dex" "git+https://github.com/VirusTotal/yara-python.git@v3.11.0"
-  pip install --no-index --find-links=yara-python yara-python
-  rmdir /q /s yara-python >nul 2>&1
-  pip install apkid==2.1.0
-  echo [INSTALL] Running APKiD Test
-  apkid DynamicAnalyzer\tools\onDevice\mobsf_agents\ClipDump.apk
+  pip install --no-index --find-links=scripts/wheels yara-python
   if %errorlevel% neq 0 (
-    echo [ERROR] APKiD installation failed. Have you installed Visual Studio BuildTools?
-    pause
-    exit /b %errorlevel%
+    echo [INSTALL] Buidling dex enabled yara-python
+    pip install --upgrade wheel
+    rmdir /q /s yara-python >nul 2>&1
+    pip wheel --wheel-dir=yara-python --build-option="build" --build-option="--enable-dex" "git+https://github.com/VirusTotal/yara-python.git@v3.11.0"
+    if %errorlevel% neq 0 (
+      echo [ERROR] APKiD installation failed. Have you installed Visual Studio Build Tools and other requirements?
+      echo Please follow the official documentation: https://mobsf.github.io/docs/
+      pause
+    )
+    pip install --no-index --find-links=yara-python yara-python
+    rmdir /q /s yara-python >nul 2>&1
   )
 
   echo [INSTALL] Installing Requirements
