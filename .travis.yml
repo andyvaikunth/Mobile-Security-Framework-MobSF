@@ -1,15 +1,10 @@
-language: 
-  - shell
-osx_image: xcode11
+language: python
 dist: xenial
 python:
   - '3.6'
   - '3.7'
   - '3.8'
-os:
-  - linux
-  - osx
-  - windows
+os: linux
 git:
   depth: 25
   quiet: true
@@ -24,16 +19,62 @@ addons:
       - libxml2-dev
       - libxslt1-dev
       - libssl-dev # for libcrypto.so
+matrix:
+  include:      
+    - name: "Python 3.6.5 on macOS 10.13"
+      os: osx
+      osx_image: xcode9.4
+      language: shell
+      before_install:
+        - python3 --version
+    - name: "Python 3.7.3 on macOS 10.14"
+      os: osx
+      osx_image: xcode10.2
+      language: shell
+      before_install:
+        - python3 --version
+    - name: "Python 3.7.3 on macOS 10.15"
+      os: osx
+      osx_image: xcode11
+      language: shell
+      before_install:
+        - python3 --version
+
+    - name: "Python 3.6.8 on Windows 10"
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.6.8
+        - python --version
+      env:
+        - PATH=/c/Python36:/c/Python36/Scripts:$PATH
+        - JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
+    - name: "Python 3.7.5 on Windows 10"
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.7.5
+        - python --version
+      env:
+        - PATH=/c/Python37:/c/Python37/Scripts:$PATH
+        - JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
+    - name: "Python 3.8.0 on Windows 10"
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.8.0
+        - python --version
+      env:
+        - PATH=/c/Python37:/c/Python37/Scripts:$PATH
+        - JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
 before_install:
     - export TRAVIS_COMMIT_MSG="$(git log --format=%B --no-merges -n 1)"
     - export WKHTML_URL=https://downloads.wkhtmltopdf.org/0.12/0.12.5/
     - export WKHTML_DEB=wkhtmltox_0.12.5-1.xenial_amd64.deb
     - export WKHTML_PKG=wkhtmltox-0.12.5-1.macos-cocoa.pkg
-    - export JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
-    - export PATH=/c/Python37:/c/Python37/Scripts:$JAVA_HOME/bin:$PATH
     - if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget ${WKHTML_URL}${WKHTML_DEB} && sudo dpkg -i ${WKHTML_DEB}; fi
     - if [ "$TRAVIS_OS_NAME" = "osx" ]; then wget ${WKHTML_URL}${WKHTML_PKG} && sudo installer -pkg ${WKHTML_PKG} -target /; fi
-    - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install python --version 3.7.5 && choco install wkhtmltopdf --version 0.12.5 && choco install openjdk --version 13.0.102; fi
+    - if [ "$TRAVIS_OS_NAME" = "windows" ]; choco install wkhtmltopdf --version 0.12.5 && choco install openjdk --version 13.0.102; fi
 install:
 - set PYTHONIOENCODING=UTF8
 - pip3 install --upgrade pip || python -m pip install --upgrade pip

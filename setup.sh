@@ -65,7 +65,8 @@ if [ $? -ne 0 ]; then
     pip wheel --wheel-dir=yara-python --build-option="build" --build-option="--enable-dex" git+https://github.com/VirusTotal/yara-python.git@v3.11.0
     if [ $? -ne 0 ]; then
         echo '[ERROR] APKiD installation failed. Have you installed all the requirements?'
-        echo 'Please follow the official documentation: https://mobsf.github.io/docs/'
+        echo 'Please install all the requirements and run setup.bat again.'
+        echo 'Follow the official documentation: https://mobsf.github.io/docs/'
         read -p 'Press enter to continue'
     fi
     pip install --no-index --find-links=yara-python yara-python
