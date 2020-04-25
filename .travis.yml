@@ -21,17 +21,19 @@ addons:
       - libxslt1-dev
 jobs:
   include:
-    - name: "Python 3.7.7 on macOS 10.14.6"
+    - name: Python 3.7.7 on macOS 10.14.6
       os: osx
       osx_image: xcode11
       language: shell
       before_install:
         - python3 --version
-        - export WKHTML_URL=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/
+        - >-
+          export
+          WKHTML_URL=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/
         - export WKHTML_PKG=wkhtmltox-0.12.5-1.macos-cocoa.pkg
-        - wget ${WKHTML_URL}${WKHTML_PKG}
-        - sudo installer -pkg ${WKHTML_PKG} -target /
-    - name: "Python 3.6.8 on Windows 10"
+        - 'wget ${WKHTML_URL}${WKHTML_PKG}'
+        - 'sudo installer -pkg ${WKHTML_PKG} -target /'
+    - name: Python 3.6.8 on Windows 10
       os: windows
       language: shell
       before_install:
@@ -40,9 +42,9 @@ jobs:
         - choco install wkhtmltopdf --version 0.12.5
         - choco install openjdk --version 13.0.102
       env:
-        - PATH=/c/Python36:/c/Python36/Scripts:$PATH
+        - 'PATH=/c/Python36:/c/Python36/Scripts:$PATH'
         - JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
-    - name: "Python 3.7.5 on Windows 10"
+    - name: Python 3.7.5 on Windows 10
       os: windows
       language: shell
       before_install:
@@ -51,19 +53,27 @@ jobs:
         - choco install wkhtmltopdf --version 0.12.5
         - choco install openjdk --version 13.0.102
       env:
-        - PATH=/c/Python37:/c/Python37/Scripts:$PATH
+        - 'PATH=/c/Python37:/c/Python37/Scripts:$PATH'
         - JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
 before_install:
   - export TRAVIS_COMMIT_MSG="$(git log --format=%B --no-merges -n 1)"
-  - export WKHTML_URL=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/
+  - >-
+    export
+    WKHTML_URL=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/
   - export WKHTML_DEB=wkhtmltox_0.12.5-1.bionic_amd64.deb
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget ${WKHTML_URL}${WKHTML_DEB} && sudo dpkg -i ${WKHTML_DEB}; fi
+  - >-
+    if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget ${WKHTML_URL}${WKHTML_DEB} &&
+    sudo dpkg -i ${WKHTML_DEB}; fi
 install:
   - set PYTHONIOENCODING=UTF8
   - pip3 install --upgrade pip || python -m pip install --upgrade pip
   - pip3 install --upgrade wheel tox
 before_script:
-  - pip3 install --no-index --find-links=scripts/wheels yara-python || ( pip3 wheel --wheel-dir=yara-python --build-option="build" --build-option="--enable-dex" "git+https://github.com/VirusTotal/yara-python.git@v3.11.0" && pip3 install --no-index --find-links=yara-python yara-python )
+  - >-
+    pip3 install --no-index --find-links=scripts/wheels yara-python || 
+    (pip3 wheel --wheel-dir=yara-python --build-option="build" --build-option="--enable-dex"
+    "git+https://github.com/VirusTotal/yara-python.git@v3.11.0" &&
+    pip3 install --no-index --find-links=yara-python yara-python)
   - pip3 install -r requirements.txt
   - python3 manage.py makemigrations || python manage.py makemigrations
   - python3 manage.py migrate || python manage.py migrate
@@ -72,4 +82,6 @@ script:
   - tox -e lint
   - python3 manage.py test || python manage.py test
 notifications:
-  slack: mobsf:3pHCGXIITe1KqgTxlO1Awh5D
+  slack:
+    secure: >-
+    CDRx07Y9X0K5lioKD8pLlYtmj75fxyXZaJkag/z20IHEx7AyQJ0/1xZpNwNP3c9IA/XT7TOr7J+qMs4hKZ5u0PAaQapFhoFFb3dE7Z6MNEU2jryqawbwsCcWteCilEa89tmXCDIiIwFNvlJmRYnlbNn7wFKmVoFqdCRrYZ7y7W3LwHVuf2+m99ix365q7DjITUeyG9HDB6Ep2MBLY3c9OTRdrWYnAI+wOOZaiybrNM2WRd6JlT1DbGRfkGkW7iq+WnhaCd/pSMO72NNh6w7sV1atauSMWm5hVCLFZq6w7O5VcVbRv6a6PBot20tQF0IvroZHBtETsrPuExBVacIzI/uOv/g5ZNXkzDTfTWw7BXNTIpEqObGl1inq/BiN8XgFG5v3rw8JXUzF5J90hYSAGOPBFeMZAGU9WN7+/hUL3IVIqxu0SQ8MhcRgHscoKc+4Ah21Okn2MgO/jnzAZoA5kjjNLr02CKD9jnwzckBRb4MbMFEP6uuVypDtH2kCIDIVEiwhgmolUklSlWNIXpMf4A2cAdtEVZiqkiziycOHAtzN7Z86hBgOvHXzFCB9ZuUugU5j8Gf8h+sjdxNf82uZ4jLhOE2Fvt5Z6voc5CVKQc2yqG+gnRfphS0E4DlnLepOiYfdGz15WYkdnNHiG8vAXKwNZiJHPO8fuX1Ds6zsnAo=
