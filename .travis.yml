@@ -71,7 +71,7 @@ matrix:
 before_install:
     - export TRAVIS_COMMIT_MSG="$(git log --format=%B --no-merges -n 1)"
     - export WKHTML_URL=https://downloads.wkhtmltopdf.org/0.12/0.12.5/
-    - export WKHTML_DEB=wkhtmltox_0.12.5-1.xenial_amd64.deb
+    - export WKHTML_DEB=wkhtmltox_0.12.1.4-1.bionic_amd64.deb
     - export WKHTML_PKG=wkhtmltox-0.12.5-1.macos-cocoa.pkg
     - if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget ${WKHTML_URL}${WKHTML_DEB} && sudo dpkg -i ${WKHTML_DEB}; fi
     - if [ "$TRAVIS_OS_NAME" = "osx" ]; then wget ${WKHTML_URL}${WKHTML_PKG} && sudo installer -pkg ${WKHTML_PKG} -target /; fi
