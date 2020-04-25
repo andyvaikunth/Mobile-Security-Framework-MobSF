@@ -63,7 +63,7 @@ matrix:
         - choco install wkhtmltopdf --version 0.12.5
         - choco install openjdk --version 13.0.102
       env:
-        - PATH=/c/Python37:/c/Python37/Scripts:$PATH
+        - PATH=/c/Python38:/c/Python38/Scripts:$PATH
         - JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
 before_install:
   - export TRAVIS_COMMIT_MSG="$(git log --format=%B --no-merges -n 1)"
@@ -85,4 +85,3 @@ script:
   - python3 manage.py test || python manage.py test
 notifications:
   slack: mobsf:3pHCGXIITe1KqgTxlO1Awh5D
-  
