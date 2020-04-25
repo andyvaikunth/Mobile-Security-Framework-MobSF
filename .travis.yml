@@ -1,5 +1,4 @@
 language: 
-  - python
   - shell
 osx_image: xcode11
 dist: xenial
