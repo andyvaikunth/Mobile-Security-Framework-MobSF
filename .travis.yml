@@ -19,7 +19,7 @@ addons:
       - libffi-dev
       - libxml2-dev
       - libxslt1-dev
-matrix:
+jobs:
   include:
     - name: "Python 3.7.7 on macOS 10.14.6"
       os: osx
@@ -31,7 +31,6 @@ matrix:
         - export WKHTML_PKG=wkhtmltox-0.12.5-1.macos-cocoa.pkg
         - wget ${WKHTML_URL}${WKHTML_PKG}
         - sudo installer -pkg ${WKHTML_PKG} -target /
-
     - name: "Python 3.6.8 on Windows 10"
       os: windows
       language: shell
@@ -53,17 +52,6 @@ matrix:
         - choco install openjdk --version 13.0.102
       env:
         - PATH=/c/Python37:/c/Python37/Scripts:$PATH
-        - JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
-    - name: "Python 3.8.0 on Windows 10"
-      os: windows
-      language: shell
-      before_install:
-        - choco install python --version 3.8.0
-        - python --version
-        - choco install wkhtmltopdf --version 0.12.5
-        - choco install openjdk --version 13.0.102
-      env:
-        - PATH=/c/Python38:/c/Python38/Scripts:$PATH
         - JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
 before_install:
   - export TRAVIS_COMMIT_MSG="$(git log --format=%B --no-merges -n 1)"

@@ -1,12 +1,12 @@
 @echo off
 where python >nul 2>&1 && (
-  deactivate
+  deactivate >nul 2>&1
   echo [INSTALL] Found Python3
-  pip3 >nul 2>&1 && (
-    echo [INSTALL] Found pip3
+  pip >nul 2>&1 && (
+    echo [INSTALL] Found pip
     python -m pip install --no-cache-dir --upgrade pip
   ) || (
-    echo [ERROR] pip3 is not available in PATH
+    echo [ERROR] pip is not available in PATH
     pause
     exit /b
   )
