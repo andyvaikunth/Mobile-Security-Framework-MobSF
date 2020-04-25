@@ -1,5 +1,6 @@
 language: python
-dist: xenial
+name: Ubuntu 18.04
+dist: bionic
 python:
   - '3.6'
   - '3.7'
@@ -33,7 +34,7 @@ matrix:
       language: shell
       before_install:
         - python3 --version
-    - name: "Python 3.7.3 on macOS 10.15"
+    - name: "Python 3.8.0 on macOS 10.15"
       os: osx
       osx_image: xcode11
       language: shell
@@ -74,7 +75,7 @@ before_install:
     - export WKHTML_PKG=wkhtmltox-0.12.5-1.macos-cocoa.pkg
     - if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget ${WKHTML_URL}${WKHTML_DEB} && sudo dpkg -i ${WKHTML_DEB}; fi
     - if [ "$TRAVIS_OS_NAME" = "osx" ]; then wget ${WKHTML_URL}${WKHTML_PKG} && sudo installer -pkg ${WKHTML_PKG} -target /; fi
-    - if [ "$TRAVIS_OS_NAME" = "windows" ]; choco install wkhtmltopdf --version 0.12.5 && choco install openjdk --version 13.0.102; fi
+    - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install wkhtmltopdf --version 0.12.5 && choco install openjdk --version 13.0.102; fi
 install:
 - set PYTHONIOENCODING=UTF8
 - pip3 install --upgrade pip || python -m pip install --upgrade pip
