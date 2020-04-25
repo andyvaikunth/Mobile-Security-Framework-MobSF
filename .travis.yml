@@ -19,7 +19,6 @@ addons:
       - libffi-dev
       - libxml2-dev
       - libxslt1-dev
-      - libssl-dev # for libcrypto.so
 matrix:
   include:
     - name: "Python 3.7.7 on macOS 10.14.6"
@@ -41,8 +40,6 @@ matrix:
         - python --version
         - choco install wkhtmltopdf --version 0.12.5
         - choco install openjdk --version 13.0.102
-        - pip3 wheel --wheel-dir=yara-python --build-option="build" --build-option="--enable-dex" "git+https://github.com/VirusTotal/yara-python.git@v3.11.0"
-        - pip install --no-index --find-links=yara-python yara-python
       env:
         - PATH=/c/Python36:/c/Python36/Scripts:$PATH
         - JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
@@ -65,9 +62,6 @@ matrix:
         - python --version
         - choco install wkhtmltopdf --version 0.12.5
         - choco install openjdk --version 13.0.102
-        - pip3 install --upgrade wheel
-        - pip3 wheel --wheel-dir=yara-python --build-option="build" --build-option="--enable-dex" "git+https://github.com/VirusTotal/yara-python.git@v3.11.0"
-        - pip install --no-index --find-links=yara-python yara-python
       env:
         - PATH=/c/Python37:/c/Python37/Scripts:$PATH
         - JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
@@ -79,10 +73,10 @@ before_install:
 install:
   - set PYTHONIOENCODING=UTF8
   - pip3 install --upgrade pip || python -m pip install --upgrade pip
+  - pip3 install --upgrade wheel tox
 before_script:
-  - pip3 install --upgrade tox
-  - pip3 install --no-index --find-links=scripts/wheels yara-python
-  - pip3 install --no-cache-dir -r requirements.txt
+  - pip3 install --no-index --find-links=scripts/wheels yara-python || ( pip3 wheel --wheel-dir=yara-python --build-option="build" --build-option="--enable-dex" "git+https://github.com/VirusTotal/yara-python.git@v3.11.0" && pip3 install --no-index --find-links=yara-python yara-python )
+  - pip3 install -r requirements.txt
   - python3 manage.py makemigrations || python manage.py makemigrations
   - python3 manage.py migrate || python manage.py migrate
   - git submodule update --init --recursive
@@ -90,6 +84,5 @@ script:
   - tox -e lint
   - python3 manage.py test || python manage.py test
 notifications:
-  slack:
-    secure: "mHQxpRtm0QV664fUEtlwtqBgxf1EVZy58Udhg0mkbVKGb7VhKxheY/QZAY7thtoW4nccuNpv7ldl277wSQkQz7o7lurY9ilhVIdcwjn1JQA/0QeFB1PyCYmVdTSiH6kJqjkxKTHaU8DrSvphkpuRaQo0SeI5xGrt2D0uecmnLtaywdT8bpnyHXwB/bBPcGgXwWsYOXXQHeSwzBShG9Ty0xs0sNt+0d+3E4ZQ+SCNizD87ydrR8czdNhruxwack+NmadycTGYsqtjvSSRlcK6BTxWE77wV9vng8F8tHig3GKk9gKmyAIgG/dcdW7AlUoQbydePqfCam8/hK/EinMts3AcfRX1aEl6WnpebWfuzS2igBrmgickh3+FhMslfg6ABj8JkwHkIoVVGhgfizgCF0uciYwJY3SXEaLj3igRs2kLqwhIInhvsBGaD5BuOn75fIS74QKN9i0qCrV3ysZNQn+qF4TgyuQF+KsJ+jKiJ2xqtT6mDAVbfVOOgELi4v13cXNJLyFAIEdNOQhIWd6Gev1Nword48OBgo3aaee5pCU9UUijL1PYz8jO00Iejyel+WXitK04tt5PCYmjXbxDD53cM9hqEOKM8QNede42TU+skv2OkfhPbjEU4EB9epq9Xwg8v2EUcrbBYifNDY2ZaJDZEtFp7CbL2W4HV7vMyNo="
+  slack: mobsf:3pHCGXIITe1KqgTxlO1Awh5D
   
