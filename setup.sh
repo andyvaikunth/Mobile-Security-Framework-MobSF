@@ -1,4 +1,5 @@
 #!/bin/bash
+unamestr=$(uname)
 if ! [ -x "$(command -v python3)" ]; then
   echo '[ERROR] python3 is not installed.' >&2
   exit 1
@@ -8,14 +9,17 @@ echo '[INSTALL] Found Python3'
 python3 -m pip -V
 if [ $? -eq 0 ]; then
   echo '[INSTALL] Found pip'
-  python3 -m pip install --upgrade pip
+  if [[ $unamestr == 'Darwin' ]]; then
+      python3 -m pip install --no-cache-dir --upgrade pip
+  else
+      python3 -m pip install --no-cache-dir --upgrade pip --user
+  fi
 else
   echo '[ERROR] python3-pip not installed'
   exit 1
 fi
 
-unamestr=$(uname)
-if [[ "$unamestr" == 'Darwin' ]]; then
+if [[ $unamestr == 'Darwin' ]]; then
     export ARCHFLAGS='-arch x86_64'
     export LDFLAGS='-L/usr/local/opt/openssl/lib'
     export CFLAGS='-I/usr/local/opt/openssl/include'

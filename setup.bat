@@ -4,7 +4,7 @@ where python >nul 2>&1 && (
   echo [INSTALL] Found Python3
   pip3 >nul 2>&1 && (
     echo [INSTALL] Found pip3
-    python -m pip install --upgrade pip
+    python -m pip install --no-cache-dir --upgrade pip
   ) || (
     echo [ERROR] pip3 is not available in PATH
     pause
