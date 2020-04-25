@@ -32,7 +32,7 @@ before_install:
     - export JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
     - export PATH=/c/Python37:/c/Python37/Scripts:$JAVA_HOME/bin:$PATH
     - if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget ${WKHTML_URL}${WKHTML_DEB} && sudo dpkg -i ${WKHTML_DEB}; fi
-    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then wget ${WKHTML_URL}${WKHTML_PKG} && sudo installer -pkg ${WKHTML_DEB} -target /; fi
+    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then wget ${WKHTML_URL}${WKHTML_PKG} && sudo installer -pkg ${WKHTML_PKG} -target /; fi
     - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install python --version 3.7.5 && choco install wkhtmltopdf --version 0.12.5 && choco install openjdk --version 13.0.102; fi
 install:
 - set PYTHONIOENCODING=UTF8
