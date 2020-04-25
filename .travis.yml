@@ -35,6 +35,12 @@ matrix:
       before_install:
         - choco install python --version 3.6.8
         - python --version
+        - choco install wkhtmltopdf --version 0.12.5
+        - choco install openjdk --version 13.0.102
+        - export WKHTML_URL=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/
+        - export WKHTML_PKG=wkhtmltox-0.12.5-1.macos-cocoa.pkg
+        - wget ${WKHTML_URL}${WKHTML_PKG}
+        - sudo installer -pkg ${WKHTML_PKG} -target /
       env:
         - PATH=/c/Python36:/c/Python36/Scripts:$PATH
         - JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
@@ -44,6 +50,8 @@ matrix:
       before_install:
         - choco install python --version 3.7.5
         - python --version
+        - choco install wkhtmltopdf --version 0.12.5
+        - choco install openjdk --version 13.0.102
       env:
         - PATH=/c/Python37:/c/Python37/Scripts:$PATH
         - JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
@@ -53,30 +61,29 @@ matrix:
       before_install:
         - choco install python --version 3.8.0
         - python --version
+        - choco install wkhtmltopdf --version 0.12.5
+        - choco install openjdk --version 13.0.102
       env:
         - PATH=/c/Python37:/c/Python37/Scripts:$PATH
         - JAVA_HOME="/c/Program Files/OpenJDK/jdk-13.0.2"
 before_install:
-    - export TRAVIS_COMMIT_MSG="$(git log --format=%B --no-merges -n 1)"
-    - export WKHTML_URL=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/
-    - export WKHTML_DEB=wkhtmltox_0.12.5-1.bionic_amd64.deb
-    - export WKHTML_PKG=wkhtmltox-0.12.5-1.macos-cocoa.pkg
-    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget ${WKHTML_URL}${WKHTML_DEB} && sudo dpkg -i ${WKHTML_DEB}; fi
-    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then wget ${WKHTML_URL}${WKHTML_PKG} && sudo installer -pkg ${WKHTML_PKG} -target /; fi
-    - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install wkhtmltopdf --version 0.12.5 && choco install openjdk --version 13.0.102; fi
+  - export TRAVIS_COMMIT_MSG="$(git log --format=%B --no-merges -n 1)"
+  - export WKHTML_URL=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/
+  - export WKHTML_DEB=wkhtmltox_0.12.5-1.bionic_amd64.deb
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget ${WKHTML_URL}${WKHTML_DEB} && sudo dpkg -i ${WKHTML_DEB}; fi
 install:
-- set PYTHONIOENCODING=UTF8
-- pip3 install --upgrade pip || python -m pip install --upgrade pip
+  - set PYTHONIOENCODING=UTF8
+  - pip3 install --upgrade pip || python -m pip install --upgrade pip
 before_script:
-- pip3 install --upgrade tox
-- pip3 install --no-index --find-links=scripts/wheels yara-python
-- pip3 install --no-cache-dir -r requirements.txt
-- python3 manage.py makemigrations || python manage.py makemigrations
-- python3 manage.py migrate || python manage.py migrate
-- git submodule update --init --recursive
+  - pip3 install --upgrade tox
+  - pip3 install --no-index --find-links=scripts/wheels yara-python
+  - pip3 install --no-cache-dir -r requirements.txt
+  - python3 manage.py makemigrations || python manage.py makemigrations
+  - python3 manage.py migrate || python manage.py migrate
+  - git submodule update --init --recursive
 script:
-- tox -e lint
-- python3 manage.py test || python manage.py test
+  - tox -e lint
+  - python3 manage.py test || python manage.py test
 notifications:
   slack: mobsf:4Ce13XOnMRzFG3bqQ0Hap7OP
   
